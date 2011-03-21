@@ -92,6 +92,7 @@ module Jammit
     # Look up a package asset list by name, raising an exception if the
     # package has gone missing.
     def package_for(package, extension)
+      package = package.to_sym
       pack = @packages[extension] && @packages[extension][package]
       pack || not_found(package, extension)
     end
