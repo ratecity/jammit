@@ -34,12 +34,12 @@ module Jammit
     def include_headjs_javascripts(*packages)
       head_js_args = if should_package?
         packages.map do |pack|
-          "'#{Jammit.asset_url(pack, :js)}'"
+          "'#{Jammit.asset_url(pack, :js)}?#{rails_asset_id(Jammit.asset_url(pack, :js))}'"
         end.join(", ")
       else
         packages.map do |pack|
           Jammit.packager.individual_urls(pack, :js).map do |url|
-            "'#{url}'"
+            "'#{url}?#{rails_asset_id(url)}'"
           end.join(", ")
         end.join(", ")
       end
