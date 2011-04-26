@@ -34,13 +34,15 @@ module Jammit
     def include_headjs_javascripts(*packages)
       head_js_args = if should_package?
         packages.map do |pack|
-          "'#{Jammit.asset_url(pack, :js)}?#{rails_asset_id(Jammit.asset_url(pack, :js))}'"
+          "{'#{pack}':'#{Jammit.asset_url(pack, :js)}?#{rails_asset_id(Jammit.asset_url(pack, :js))}'}"
         end.join(", ")
       else
         packages.map do |pack|
-          Jammit.packager.individual_urls(pack, :js).map do |url|
+          list = Jammit.packager.individual_urls(pack, :js).map do |url|
             "'#{url}?#{rails_asset_id(url)}'"
-          end.join(", ")
+          end
+          list[-1] = "{'#{pack}':#{list[-1]}}"
+          list.join(", ")
         end.join(", ")
       end
       scripts = [javascript_include_tag(Jammit.headjs_path), javascript_tag("head.js(#{head_js_args});")]
